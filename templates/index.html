@@ -1,0 +1,43 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <title>Smart Resume Analyzer</title>
+    <link rel="stylesheet" href="{{ url_for('static', filename='style.css') }}">
+</head>
+
+<body>
+
+<div class="container">
+
+    <h1>🚀 Smart Resume Analyzer</h1>
+    <p class="subtitle">Analyze resumes using AI-powered matching</p>
+
+    <form method="POST" enctype="multipart/form-data" class="card">
+
+        <label>Upload Resume</label>
+        <input type="file" name="resume" accept=".pdf" required>
+
+        <label>Paste Job Description</label>
+        <textarea name="job_desc" placeholder="Paste job description here..." required></textarea>
+
+        <button type="submit">Analyze Resume</button>
+    </form>
+
+    {% if score %}
+    <div class="results card">
+        <h2>Match Score</h2>
+        <div class="score">{{ score }}%</div>
+
+        <h3>Matched Keywords</h3>
+        <div class="tags">
+            {% for c in common %}
+                <span>{{ c }}</span>
+            {% endfor %}
+        </div>
+    </div>
+    {% endif %}
+
+</div>
+
+</body>
+</html>
