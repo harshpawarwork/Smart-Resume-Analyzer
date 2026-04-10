@@ -5,57 +5,110 @@ body {
     color: #fff;
 }
 
+/* Container */
 .container {
-    max-width: 900px;
+    max-width: 1000px;
     margin: 50px auto;
 }
 
-.card {
-    background: #1e293b;
-    padding: 25px;
-    border-radius: 12px;
+/* Grid */
+.grid {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 20px;
 }
 
-/* Drag box */
+/* Card */
+.card {
+    background: rgba(30, 41, 59, 0.9);
+    padding: 25px;
+    border-radius: 15px;
+}
+
+/* Drag */
 #drop-area {
     border: 2px dashed #3b82f6;
-    border-radius: 12px;
     padding: 30px;
     text-align: center;
     margin-bottom: 20px;
-    transition: 0.3s;
 }
 
-#drop-area.highlight {
-    background: #1e40af;
+#fileElem { display: none; }
+
+/* Chips */
+.chips {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 10px;
 }
 
-#fileElem {
-    display: none;
+.chip {
+    background: #334155;
+    padding: 8px 12px;
+    border-radius: 20px;
 }
 
-.upload-btn {
-    display: inline-block;
-    padding: 10px 15px;
-    background: #3b82f6;
-    border-radius: 6px;
-    cursor: pointer;
+.chip.red {
+    background: #ef4444;
 }
 
-textarea, select {
-    width: 100%;
-    padding: 10px;
-    margin: 10px 0 20px;
-    border-radius: 6px;
-    border: none;
+/* Progress */
+.progress-bar {
+    height: 8px;
+    background: #334155;
+    border-radius: 10px;
+    margin: 10px 0;
 }
 
-button {
-    width: 100%;
-    padding: 12px;
+.progress {
+    height: 100%;
     background: #22c55e;
-    border: none;
-    border-radius: 6px;
-    color: white;
-    font-weight: bold;
+    border-radius: 10px;
+}
+
+/* Score Ring */
+.score-ring {
+    text-align: center;
+}
+
+.circle {
+    width: 120px;
+    height: 120px;
+    border-radius: 50%;
+    background: conic-gradient(#22c55e var(--value), #334155 0);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    margin: auto;
+}
+
+.circle span {
+    font-size: 1.5rem;
+}
+
+/* Loader */
+#loader {
+    display: none;
+    position: fixed;
+    top: 0;
+    left: 0;
+    right: 0;
+    bottom: 0;
+    background: rgba(0,0,0,0.8);
+    align-items: center;
+    justify-content: center;
+    flex-direction: column;
+}
+
+.spinner {
+    border: 5px solid #444;
+    border-top: 5px solid #22c55e;
+    border-radius: 50%;
+    width: 50px;
+    height: 50px;
+    animation: spin 1s linear infinite;
+}
+
+@keyframes spin {
+    100% { transform: rotate(360deg); }
 }

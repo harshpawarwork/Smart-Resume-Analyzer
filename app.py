@@ -1,6 +1,7 @@
 from flask import Flask, render_template, request
 from analyzer import (
-    extract_text, clean_text,
+    extract_text,
+    clean_text,
     calculate_similarity,
     jd_missing_skills,
     role_missing_by_category,
@@ -15,34 +16,42 @@ app = Flask(__name__)
 def index():
     if request.method == "POST":
         try:
-            file = request.files["resume"]
-            job_desc = request.form["job_desc"]
-            role = request.form["role"]
+            # 🔥 Get inputs
+            file = request.files.get("resume")
+            job_desc = request.form.get("job_desc")
+            role = request.form.get("role")
 
-            # 🔥 Check file
-            if not file:
-                return "No file uploaded"
+            # ❌ Validate
+            if not file or file.filename == "":
+                return render_template("index.html", score=None, error="No file uploaded")
 
+            if not job_desc:
+                return render_template("index.html", score=None, error="Job description required")
+
+            # 📄 Extract text
             resume_text = extract_text(file)
 
             if resume_text in ["ERROR", "NO_TEXT"]:
-                return "Error reading resume"
+                return render_template("index.html", score=None, error="Resume could not be read")
 
+            # 🧹 Clean
             resume_clean = clean_text(resume_text)
             job_clean = clean_text(job_desc)
 
+            # 📊 Score
             score = calculate_similarity(resume_clean, job_clean)
 
+            # ❗ Missing skills (JD)
             jd_missing = jd_missing_skills(resume_clean, job_clean)
 
-            role_missing = role_missing_by_category(
-                resume_clean,
-                ROLES[role]
-            )
+            # 🎯 Role-based analysis
+            role_data = ROLES.get(role, {})
+            role_missing = role_missing_by_category(resume_clean, role_data)
 
+            # 💡 Suggestions
             suggestions = generate_suggestions(role_missing)
 
-            # 🔥 IMPORTANT: send everything
+            # 🔥 SEND EVERYTHING TO UI
             return render_template(
                 "index.html",
                 score=score,
@@ -52,8 +61,14 @@ def index():
             )
 
         except Exception as e:
-            return f"Error: {str(e)}"
+            # 🔥 Show error clearly
+            return render_template(
+                "index.html",
+                score=None,
+                error=f"Error: {str(e)}"
+            )
 
+    # GET request
     return render_template("index.html", score=None)
 
 

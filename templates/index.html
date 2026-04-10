@@ -11,20 +11,22 @@
 
     <h1>🚀 Smart Resume Analyzer</h1>
 
-    <form method="POST" enctype="multipart/form-data" class="card">
+    <!-- FORM -->
+    <form method="POST" enctype="multipart/form-data" class="card" onsubmit="showLoader()">
 
-        <!-- 🔥 Drag & Drop Upload -->
         <div id="drop-area">
             <p id="file-label">Drag & Drop Resume Here</p>
-            <p>or</p>
-            <label for="fileElem" class="upload-btn">Choose File</label>
+
+            <div id="upload-section">
+                <p>or</p>
+                <label for="fileElem" class="upload-btn">Choose File</label>
+            </div>
+
             <input type="file" id="fileElem" name="resume" accept=".pdf" required>
         </div>
 
-        <!-- Job Description -->
         <textarea name="job_desc" placeholder="Paste Job Description" required></textarea>
 
-        <!-- Role -->
         <select name="role">
             <option>Software Engineer</option>
             <option>Data Analyst</option>
@@ -34,65 +36,83 @@
         <button type="submit">Analyze</button>
     </form>
 
-    <!-- 🔥 RESULT SECTION -->
     {% if score is not none %}
-    <div class="card">
 
-        <h2>📊 Score</h2>
-        <div class="score">{{ score }}%</div>
+    <!-- SCORE RING -->
+    <div class="score-ring card">
+        <div class="circle">
+            <span>{{ score }}%</span>
+        </div>
+        <h2>Match Score</h2>
+    </div>
 
-        <h3>❗ JD Missing Skills</h3>
-        {% if jd_missing %}
-        <ul>
-            {% for s in jd_missing %}
-                <li>{{ s }}</li>
-            {% endfor %}
-        </ul>
-        {% else %}
-        <p>No major missing skills</p>
-        {% endif %}
+    <div class="grid">
 
-        <h3>🎯 Role-Based Missing Skills</h3>
-
-        {% for category, skills in role_missing.items() %}
-            <h4>{{ category }}</h4>
-
-            {% if skills %}
-            <ul>
-                {% for s in skills %}
-                    <li>{{ s }}</li>
+        <!-- JD SKILLS -->
+        <div class="card">
+            <h3>❗ JD Missing Skills</h3>
+            <div class="chips">
+                {% for s in jd_missing %}
+                    <span class="chip red">{{ s }}</span>
                 {% endfor %}
-            </ul>
-            {% else %}
-            <p>All skills covered</p>
-            {% endif %}
+            </div>
+        </div>
 
-        {% endfor %}
+        <!-- ROLE SKILLS -->
+        <div class="card">
+            <h3>🎯 Role Skills</h3>
 
+            {% for category, skills in role_missing.items() %}
+
+                <h4>{{ category }}</h4>
+
+                <div class="progress-bar">
+                    <div class="progress" style="width: {{ 100 - (skills|length * 20) }}%"></div>
+                </div>
+
+                <div class="chips">
+                    {% for s in skills %}
+                        <span class="chip">{{ s }}</span>
+                    {% endfor %}
+                </div>
+
+            {% endfor %}
+        </div>
+
+    </div>
+
+    <!-- SUGGESTIONS -->
+    <div class="card">
         <h3>💡 Suggestions</h3>
-        {% if suggestions %}
         <ul>
             {% for s in suggestions %}
                 <li>{{ s }}</li>
             {% endfor %}
         </ul>
-        {% else %}
-        <p>No suggestions</p>
-        {% endif %}
-
     </div>
+
     {% endif %}
 
 </div>
 
-<!-- 🔥 DRAG & DROP SCRIPT -->
+<!-- LOADING -->
+<div id="loader">
+    <div class="spinner"></div>
+    <p>Analyzing Resume...</p>
+</div>
+
 <script>
 let dropArea = document.getElementById("drop-area");
 let fileInput = document.getElementById("fileElem");
 let fileLabel = document.getElementById("file-label");
+let uploadSection = document.getElementById("upload-section");
 
-// Highlight on drag
-dropArea.addEventListener("dragover", (e) => {
+function handleFile(file) {
+    fileLabel.innerText = "✅ " + file.name;
+    uploadSection.style.display = "none";
+}
+
+dropArea.addEventListener("dragover", e => {
     e.preventDefault();
     dropArea.classList.add("highlight");
 });
@@ -101,24 +121,26 @@ dropArea.addEventListener("dragleave", () => {
     dropArea.classList.remove("highlight");
 });
 
-// Drop file
-dropArea.addEventListener("drop", (e) => {
+dropArea.addEventListener("drop", e => {
     e.preventDefault();
     dropArea.classList.remove("highlight");
 
     let files = e.dataTransfer.files;
     if (files.length > 0) {
         fileInput.files = files;
-        fileLabel.innerText = "Selected: " + files[0].name;
+        handleFile(files[0]);
     }
 });
 
-// File chooser
 fileInput.addEventListener("change", () => {
     if (fileInput.files.length > 0) {
-        fileLabel.innerText = "Selected: " + fileInput.files[0].name;
+        handleFile(fileInput.files[0]);
     }
 });
+
+function showLoader() {
+    document.getElementById("loader").style.display = "flex";
+}
 </script>
 
 </body>
