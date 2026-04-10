@@ -13,7 +13,7 @@
 
     <form method="POST" enctype="multipart/form-data" class="card">
 
-        <!-- Drag & Drop -->
+        <!-- 🔥 Drag & Drop Upload -->
         <div id="drop-area">
             <p id="file-label">Drag & Drop Resume Here</p>
             <p>or</p>
@@ -21,8 +21,10 @@
             <input type="file" id="fileElem" name="resume" accept=".pdf" required>
         </div>
 
+        <!-- Job Description -->
         <textarea name="job_desc" placeholder="Paste Job Description" required></textarea>
 
+        <!-- Role -->
         <select name="role">
             <option>Software Engineer</option>
             <option>Data Analyst</option>
@@ -32,14 +34,64 @@
         <button type="submit">Analyze</button>
     </form>
 
+    <!-- 🔥 RESULT SECTION -->
+    {% if score is not none %}
+    <div class="card">
+
+        <h2>📊 Score</h2>
+        <div class="score">{{ score }}%</div>
+
+        <h3>❗ JD Missing Skills</h3>
+        {% if jd_missing %}
+        <ul>
+            {% for s in jd_missing %}
+                <li>{{ s }}</li>
+            {% endfor %}
+        </ul>
+        {% else %}
+        <p>No major missing skills</p>
+        {% endif %}
+
+        <h3>🎯 Role-Based Missing Skills</h3>
+
+        {% for category, skills in role_missing.items() %}
+            <h4>{{ category }}</h4>
+
+            {% if skills %}
+            <ul>
+                {% for s in skills %}
+                    <li>{{ s }}</li>
+                {% endfor %}
+            </ul>
+            {% else %}
+            <p>All skills covered</p>
+            {% endif %}
+
+        {% endfor %}
+
+        <h3>💡 Suggestions</h3>
+        {% if suggestions %}
+        <ul>
+            {% for s in suggestions %}
+                <li>{{ s }}</li>
+            {% endfor %}
+        </ul>
+        {% else %}
+        <p>No suggestions</p>
+        {% endif %}
+
+    </div>
+    {% endif %}
+
 </div>
 
+<!-- 🔥 DRAG & DROP SCRIPT -->
 <script>
 let dropArea = document.getElementById("drop-area");
 let fileInput = document.getElementById("fileElem");
 let fileLabel = document.getElementById("file-label");
 
-// Highlight
+// Highlight on drag
 dropArea.addEventListener("dragover", (e) => {
     e.preventDefault();
     dropArea.classList.add("highlight");
@@ -57,13 +109,11 @@ dropArea.addEventListener("drop", (e) => {
     let files = e.dataTransfer.files;
     if (files.length > 0) {
         fileInput.files = files;
-
-        // ✅ SHOW FILE NAME
         fileLabel.innerText = "Selected: " + files[0].name;
     }
 });
 
-// Choose file (important fix)
+// File chooser
 fileInput.addEventListener("change", () => {
     if (fileInput.files.length > 0) {
         fileLabel.innerText = "Selected: " + fileInput.files[0].name;

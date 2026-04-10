@@ -14,38 +14,47 @@ app = Flask(__name__)
 @app.route("/", methods=["GET", "POST"])
 def index():
     if request.method == "POST":
-        file = request.files["resume"]
-        job_desc = request.form["job_desc"]
-        role = request.form["role"]
+        try:
+            file = request.files["resume"]
+            job_desc = request.form["job_desc"]
+            role = request.form["role"]
 
-        resume_text = extract_text(file)
+            # 🔥 Check file
+            if not file:
+                return "No file uploaded"
 
-        if resume_text in ["ERROR", "NO_TEXT"]:
-            return "Error processing resume"
+            resume_text = extract_text(file)
 
-        resume_clean = clean_text(resume_text)
-        job_clean = clean_text(job_desc)
+            if resume_text in ["ERROR", "NO_TEXT"]:
+                return "Error reading resume"
 
-        score = calculate_similarity(resume_clean, job_clean)
+            resume_clean = clean_text(resume_text)
+            job_clean = clean_text(job_desc)
 
-        jd_missing = jd_missing_skills(resume_clean, job_clean)
+            score = calculate_similarity(resume_clean, job_clean)
 
-        role_missing = role_missing_by_category(
-            resume_clean,
-            ROLES[role]
-        )
+            jd_missing = jd_missing_skills(resume_clean, job_clean)
 
-        suggestions = generate_suggestions(role_missing)
+            role_missing = role_missing_by_category(
+                resume_clean,
+                ROLES[role]
+            )
 
-        return render_template(
-            "index.html",
-            score=score,
-            jd_missing=jd_missing,
-            role_missing=role_missing,
-            suggestions=suggestions
-        )
+            suggestions = generate_suggestions(role_missing)
 
-    return render_template("index.html")
+            # 🔥 IMPORTANT: send everything
+            return render_template(
+                "index.html",
+                score=score,
+                jd_missing=jd_missing,
+                role_missing=role_missing,
+                suggestions=suggestions
+            )
+
+        except Exception as e:
+            return f"Error: {str(e)}"
+
+    return render_template("index.html", score=None)
 
 
 if __name__ == "__main__":
