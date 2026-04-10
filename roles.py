@@ -19,7 +19,7 @@ ROLES = {
             "excel", "tableau", "power bi"
         ],
         "Concepts": [
-            "data visualization", "statistics"
+            "statistics", "data visualization"
         ]
     },
 
@@ -35,3 +35,12 @@ ROLES = {
         ]
     }
 }
+
+
+# 🔥 GLOBAL SKILL LIST (VERY IMPORTANT)
+ALL_SKILLS = set()
+
+for role in ROLES.values():
+    for category in role.values():
+        for skill in category:
+            ALL_SKILLS.add(skill)

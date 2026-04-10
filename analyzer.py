@@ -1,15 +1,18 @@
 import PyPDF2
 from pdf2image import convert_from_bytes
 import pytesseract
-import spacy
+
 from sentence_transformers import SentenceTransformer, util
+from roles import ALL_SKILLS
 
 model = SentenceTransformer('all-MiniLM-L6-v2')
-nlp = spacy.load("en_core_web_sm")
 
 pytesseract.pytesseract.tesseract_cmd = r"C:\Program Files\Tesseract-OCR\tesseract.exe"
 
 
+# -------------------------------
+# 📄 TEXT EXTRACTION
+# -------------------------------
 def extract_text(file):
     try:
         reader = PyPDF2.PdfReader(file)
@@ -39,21 +42,23 @@ def clean_text(text):
     return text.lower()
 
 
-def extract_keywords(text):
-    doc = nlp(text)
-    keywords = []
+# -------------------------------
+# 🔥 GUARANTEED SKILL EXTRACTION
+# -------------------------------
+def extract_skills(text):
+    text = text.lower()
+    found_skills = set()
 
-    for token in doc:
-        if (
-            not token.is_stop and
-            token.is_alpha and
-            token.pos_ in ["NOUN", "PROPN"]
-        ):
-            keywords.append(token.lemma_)
+    for skill in ALL_SKILLS:
+        if skill in text:
+            found_skills.add(skill)
 
-    return list(set(keywords))
+    return list(found_skills)
 
 
+# -------------------------------
+# 🤖 SIMILARITY SCORE
+# -------------------------------
 def calculate_similarity(resume_text, job_desc):
     emb1 = model.encode(resume_text, convert_to_tensor=True)
     emb2 = model.encode(job_desc, convert_to_tensor=True)
@@ -62,33 +67,27 @@ def calculate_similarity(resume_text, job_desc):
     return round(float(score) * 100, 2)
 
 
-def is_matched(skill, resume_skills):
-    for r in resume_skills:
-        sim = util.cos_sim(
-            model.encode(skill, convert_to_tensor=True),
-            model.encode(r, convert_to_tensor=True)
-        )
-        if float(sim) > 0.6:
-            return True
-    return False
-
-
-# JD-based missing skills
+# -------------------------------
+# ❗ JD MISSING SKILLS
+# -------------------------------
 def jd_missing_skills(resume_text, job_desc):
-    resume_skills = extract_keywords(resume_text)
-    job_skills = extract_keywords(job_desc)
+    resume_skills = extract_skills(resume_text)
+    job_skills = extract_skills(job_desc)
 
     missing = []
+
     for skill in job_skills:
-        if not is_matched(skill, resume_skills):
+        if skill not in resume_skills:
             missing.append(skill)
 
     return missing
 
 
-# 🔥 CATEGORY-BASED ROLE ANALYSIS
+# -------------------------------
+# 🎯 ROLE BASED
+# -------------------------------
 def role_missing_by_category(resume_text, role_data):
-    resume_skills = extract_keywords(resume_text)
+    resume_skills = extract_skills(resume_text)
 
     missing_by_category = {}
 
@@ -96,7 +95,7 @@ def role_missing_by_category(resume_text, role_data):
         missing = []
 
         for skill in skills:
-            if not is_matched(skill, resume_skills):
+            if skill not in resume_skills:
                 missing.append(skill)
 
         missing_by_category[category] = missing
@@ -104,13 +103,16 @@ def role_missing_by_category(resume_text, role_data):
     return missing_by_category
 
 
+# -------------------------------
+# 💡 SUGGESTIONS
+# -------------------------------
 def generate_suggestions(missing_dict):
     suggestions = []
 
     for category, skills in missing_dict.items():
         for skill in skills:
             suggestions.append(
-                f"Improve your {category} by learning or adding projects in {skill}"
+                f"Improve your {category} by adding projects in {skill}"
             )
 
     return suggestions
