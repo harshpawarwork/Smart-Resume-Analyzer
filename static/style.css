@@ -14,10 +14,9 @@ body {
     background: #1e293b;
     padding: 25px;
     border-radius: 12px;
-    margin-bottom: 20px;
 }
 
-/* 🔥 Drag & Drop Box */
+/* Drag box */
 #drop-area {
     border: 2px dashed #3b82f6;
     border-radius: 12px;
@@ -31,12 +30,10 @@ body {
     background: #1e40af;
 }
 
-/* Hide default input */
 #fileElem {
     display: none;
 }
 
-/* Custom button */
 .upload-btn {
     display: inline-block;
     padding: 10px 15px;
@@ -45,7 +42,6 @@ body {
     cursor: pointer;
 }
 
-/* Inputs */
 textarea, select {
     width: 100%;
     padding: 10px;
@@ -54,7 +50,6 @@ textarea, select {
     border: none;
 }
 
-/* Button */
 button {
     width: 100%;
     padding: 12px;
@@ -63,21 +58,4 @@ button {
     border-radius: 6px;
     color: white;
     font-weight: bold;
-}
-
-/* Score */
-.score {
-    font-size: 2.5rem;
-    text-align: center;
-    color: #22c55e;
-}
-
-/* Lists */
-ul {
-    text-align: left;
-    padding-left: 20px;
-}
-
-li {
-    margin: 5px 0;
 }

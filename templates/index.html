@@ -13,9 +13,9 @@
 
     <form method="POST" enctype="multipart/form-data" class="card">
 
-        <!-- 🔥 Drag & Drop Box -->
+        <!-- Drag & Drop -->
         <div id="drop-area">
-            <p>Drag & Drop Resume Here</p>
+            <p id="file-label">Drag & Drop Resume Here</p>
             <p>or</p>
             <label for="fileElem" class="upload-btn">Choose File</label>
             <input type="file" id="fileElem" name="resume" accept=".pdf" required>
@@ -32,44 +32,14 @@
         <button type="submit">Analyze</button>
     </form>
 
-    {% if score %}
-    <div class="card">
-        <h2>Score</h2>
-        <div class="score">{{ score }}%</div>
-
-        <h3>❗ JD Missing Skills</h3>
-        <ul>
-            {% for s in jd_missing %}
-                <li>{{ s }}</li>
-            {% endfor %}
-        </ul>
-
-        <h3>🎯 Role-Based Missing Skills</h3>
-        {% for category, skills in role_missing.items() %}
-            <h4>{{ category }}</h4>
-            <ul>
-                {% for s in skills %}
-                    <li>{{ s }}</li>
-                {% endfor %}
-            </ul>
-        {% endfor %}
-
-        <h3>💡 Suggestions</h3>
-        <ul>
-            {% for s in suggestions %}
-                <li>{{ s }}</li>
-            {% endfor %}
-        </ul>
-    </div>
-    {% endif %}
-
 </div>
 
-<!-- 🔥 JS for drag & drop -->
 <script>
 let dropArea = document.getElementById("drop-area");
 let fileInput = document.getElementById("fileElem");
+let fileLabel = document.getElementById("file-label");
 
+// Highlight
 dropArea.addEventListener("dragover", (e) => {
     e.preventDefault();
     dropArea.classList.add("highlight");
@@ -79,12 +49,25 @@ dropArea.addEventListener("dragleave", () => {
     dropArea.classList.remove("highlight");
 });
 
+// Drop file
 dropArea.addEventListener("drop", (e) => {
     e.preventDefault();
     dropArea.classList.remove("highlight");
 
     let files = e.dataTransfer.files;
-    fileInput.files = files;
+    if (files.length > 0) {
+        fileInput.files = files;
+
+        // ✅ SHOW FILE NAME
+        fileLabel.innerText = "Selected: " + files[0].name;
+    }
+});
+
+// Choose file (important fix)
+fileInput.addEventListener("change", () => {
+    if (fileInput.files.length > 0) {
+        fileLabel.innerText = "Selected: " + fileInput.files[0].name;
+    }
 });
 </script>
 
