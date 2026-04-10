@@ -12,8 +12,9 @@
     <h1>🚀 Smart Resume Analyzer</h1>
 
     <!-- FORM -->
-    <form method="POST" enctype="multipart/form-data" class="card" onsubmit="showLoader()">
+    <form method="POST" enctype="multipart/form-data" class="card">
 
+        <!-- Drag & Drop -->
         <div id="drop-area">
             <p id="file-label">Drag & Drop Resume Here</p>
 
@@ -25,105 +26,110 @@
             <input type="file" id="fileElem" name="resume" accept=".pdf" required>
         </div>
 
+        <!-- Job Description -->
         <textarea name="job_desc" placeholder="Paste Job Description" required></textarea>
 
-        <select name="role">
-            <option>Software Engineer</option>
-            <option>Data Analyst</option>
-            <option>ML Engineer</option>
-        </select>
+        <!-- Role + Button Row -->
+        <div class="form-row">
+            <select name="role">
+                <option>Software Engineer</option>
+                <option>Data Analyst</option>
+                <option>ML Engineer</option>
+            </select>
 
-        <button type="submit">Analyze</button>
+            <button type="submit">Analyze</button>
+        </div>
+
     </form>
 
+    <!-- RESULTS -->
     {% if score is not none %}
 
-    <!-- SCORE RING -->
-    <div class="score-ring card">
-        <div class="circle">
-            <span>{{ score }}%</span>
-        </div>
-        <h2>Match Score</h2>
+    <!-- Score -->
+    <div class="card">
+        <h2 style="text-align:center;">Match Score</h2>
+        <div class="score">{{ score }}%</div>
     </div>
 
+    <!-- Grid Layout -->
     <div class="grid">
 
-        <!-- JD SKILLS -->
+        <!-- JD Missing -->
         <div class="card">
             <h3>❗ JD Missing Skills</h3>
+
+            {% if jd_missing %}
             <div class="chips">
                 {% for s in jd_missing %}
                     <span class="chip red">{{ s }}</span>
                 {% endfor %}
             </div>
+            {% else %}
+            <p>No major missing skills</p>
+            {% endif %}
         </div>
 
-        <!-- ROLE SKILLS -->
+        <!-- Role Skills -->
         <div class="card">
-            <h3>🎯 Role Skills</h3>
+            <h3>🎯 Role-Based Skills</h3>
 
             {% for category, skills in role_missing.items() %}
-
                 <h4>{{ category }}</h4>
 
-                <div class="progress-bar">
-                    <div class="progress" style="width: {{ 100 - (skills|length * 20) }}%"></div>
-                </div>
-
+                {% if skills %}
                 <div class="chips">
                     {% for s in skills %}
                         <span class="chip">{{ s }}</span>
                     {% endfor %}
                 </div>
-
+                {% else %}
+                <p>All skills covered</p>
+                {% endif %}
             {% endfor %}
+
         </div>
 
     </div>
 
-    <!-- SUGGESTIONS -->
+    <!-- Suggestions -->
     <div class="card">
         <h3>💡 Suggestions</h3>
+
+        {% if suggestions %}
         <ul>
             {% for s in suggestions %}
                 <li>{{ s }}</li>
             {% endfor %}
         </ul>
+        {% else %}
+        <p>No suggestions</p>
+        {% endif %}
     </div>
 
     {% endif %}
 
 </div>
 
-<!-- LOADING -->
-<div id="loader">
-    <div class="spinner"></div>
-    <p>Analyzing Resume...</p>
-</div>
-
+<!-- SCRIPT -->
 <script>
 let dropArea = document.getElementById("drop-area");
 let fileInput = document.getElementById("fileElem");
 let fileLabel = document.getElementById("file-label");
 let uploadSection = document.getElementById("upload-section");
 
+// Handle file
 function handleFile(file) {
     fileLabel.innerText = "✅ " + file.name;
     uploadSection.style.display = "none";
 }
 
-dropArea.addEventListener("dragover", e => {
+// Drag events
+dropArea.addEventListener("dragover", (e) => {
     e.preventDefault();
-    dropArea.classList.add("highlight");
 });
 
-dropArea.addEventListener("dragleave", () => {
-    dropArea.classList.remove("highlight");
-});
-
-dropArea.addEventListener("drop", e => {
+dropArea.addEventListener("drop", (e) => {
     e.preventDefault();
-    dropArea.classList.remove("highlight");
 
     let files = e.dataTransfer.files;
     if (files.length > 0) {
@@ -132,15 +138,12 @@ dropArea.addEventListener("drop", e => {
     }
 });
 
+// File select
 fileInput.addEventListener("change", () => {
     if (fileInput.files.length > 0) {
         handleFile(fileInput.files[0]);
     }
 });
-
-function showLoader() {
-    document.getElementById("loader").style.display = "flex";
-}
 </script>
 
 </body>
