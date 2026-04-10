@@ -13,7 +13,13 @@
 
     <form method="POST" enctype="multipart/form-data" class="card">
 
-        <input type="file" name="resume" required>
+        <!-- 🔥 Drag & Drop Box -->
+        <div id="drop-area">
+            <p>Drag & Drop Resume Here</p>
+            <p>or</p>
+            <label for="fileElem" class="upload-btn">Choose File</label>
+            <input type="file" id="fileElem" name="resume" accept=".pdf" required>
+        </div>
 
         <textarea name="job_desc" placeholder="Paste Job Description" required></textarea>
 
@@ -28,7 +34,6 @@
 
     {% if score %}
     <div class="card">
-
         <h2>Score</h2>
         <div class="score">{{ score }}%</div>
 
@@ -40,7 +45,6 @@
         </ul>
 
         <h3>🎯 Role-Based Missing Skills</h3>
-
         {% for category, skills in role_missing.items() %}
             <h4>{{ category }}</h4>
             <ul>
@@ -56,11 +60,33 @@
                 <li>{{ s }}</li>
             {% endfor %}
         </ul>
-
     </div>
     {% endif %}
 
 </div>
+
+<!-- 🔥 JS for drag & drop -->
+<script>
+let dropArea = document.getElementById("drop-area");
+let fileInput = document.getElementById("fileElem");
+
+dropArea.addEventListener("dragover", (e) => {
+    e.preventDefault();
+    dropArea.classList.add("highlight");
+});
+
+dropArea.addEventListener("dragleave", () => {
+    dropArea.classList.remove("highlight");
+});
+
+dropArea.addEventListener("drop", (e) => {
+    e.preventDefault();
+    dropArea.classList.remove("highlight");
+
+    let files = e.dataTransfer.files;
+    fileInput.files = files;
+});
+</script>
 
 </body>
 </html>
