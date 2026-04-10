@@ -10,30 +10,52 @@
 <div class="container">
 
     <h1>🚀 Smart Resume Analyzer</h1>
-    <p class="subtitle">Analyze resumes using AI-powered matching</p>
 
     <form method="POST" enctype="multipart/form-data" class="card">
 
-        <label>Upload Resume</label>
-        <input type="file" name="resume" accept=".pdf" required>
+        <input type="file" name="resume" required>
 
-        <label>Paste Job Description</label>
-        <textarea name="job_desc" placeholder="Paste job description here..." required></textarea>
+        <textarea name="job_desc" placeholder="Paste Job Description" required></textarea>
 
-        <button type="submit">Analyze Resume</button>
+        <select name="role">
+            <option>Software Engineer</option>
+            <option>Data Analyst</option>
+            <option>ML Engineer</option>
+        </select>
+
+        <button type="submit">Analyze</button>
     </form>
 
     {% if score %}
-    <div class="results card">
-        <h2>Match Score</h2>
-        <div class="score">{{ score }}%</div>
+    <div class="card">
 
-        <h3>Matched Keywords</h3>
-        <div class="tags">
-            {% for c in common %}
-                <span>{{ c }}</span>
+        <h2>Score: {{ score }}%</h2>
+
+        <h3>❗ JD Missing Skills</h3>
+        <ul>
+            {% for s in jd_missing %}
+                <li>{{ s }}</li>
             {% endfor %}
-        </div>
+        </ul>
+
+        <h3>🎯 Role-Based Missing Skills</h3>
+
+        {% for category, skills in role_missing.items() %}
+            <h4>{{ category }}</h4>
+            <ul>
+                {% for s in skills %}
+                    <li>{{ s }}</li>
+                {% endfor %}
+            </ul>
+        {% endfor %}
+
+        <h3>💡 Suggestions</h3>
+        <ul>
+            {% for s in suggestions %}
+                <li>{{ s }}</li>
+            {% endfor %}
+        </ul>
+
     </div>
     {% endif %}
 
