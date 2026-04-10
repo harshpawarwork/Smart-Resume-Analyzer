@@ -5,21 +5,9 @@ body {
     color: #fff;
 }
 
-/* Center layout */
 .container {
-    max-width: 700px;
+    max-width: 900px;
     margin: 50px auto;
-    text-align: center;
-}
-
-/* Title */
-h1 {
-    font-size: 2.5rem;
-}
-
-.subtitle {
-    color: #94a3b8;
-    margin-bottom: 30px;
 }
 
 /* Card */
@@ -28,17 +16,24 @@ h1 {
     padding: 25px;
     border-radius: 12px;
     margin-bottom: 20px;
-    box-shadow: 0 10px 25px rgba(0,0,0,0.3);
+}
+
+/* Headings */
+h1, h2 {
+    text-align: center;
+}
+
+h3 {
+    margin-top: 20px;
 }
 
 /* Inputs */
-input, textarea {
+input, textarea, select {
     width: 100%;
     padding: 10px;
     margin: 10px 0 20px;
     border-radius: 6px;
     border: none;
-    outline: none;
 }
 
 /* Button */
@@ -50,36 +45,27 @@ button {
     border-radius: 6px;
     color: white;
     font-weight: bold;
-    cursor: pointer;
 }
 
-button:hover {
-    background: #2563eb;
-}
-
-/* Results */
-.results {
-    text-align: center;
-}
-
+/* Score */
 .score {
-    font-size: 3rem;
-    font-weight: bold;
+    font-size: 2.5rem;
+    text-align: center;
     color: #22c55e;
-    margin: 10px 0;
 }
 
-/* Tags */
-.tags {
-    display: flex;
-    flex-wrap: wrap;
-    justify-content: center;
-    gap: 10px;
+/* Lists */
+ul {
+    text-align: left;
+    padding-left: 20px;
 }
 
-.tags span {
-    background: #334155;
-    padding: 6px 12px;
-    border-radius: 20px;
-    font-size: 0.9rem;
+li {
+    margin: 5px 0;
+}
+
+/* Category title */
+h4 {
+    margin-top: 15px;
+    color: #38bdf8;
 }

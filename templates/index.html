@@ -1,65 +1,31 @@
-<!DOCTYPE html>
-<html>
-<head>
-    <title>Smart Resume Analyzer</title>
-    <link rel="stylesheet" href="{{ url_for('static', filename='style.css') }}">
-</head>
+<div class="card">
 
-<body>
+    <h2>Score</h2>
+    <div class="score">{{ score }}%</div>
 
-<div class="container">
-
-    <h1>🚀 Smart Resume Analyzer</h1>
-
-    <form method="POST" enctype="multipart/form-data" class="card">
-
-        <input type="file" name="resume" required>
-
-        <textarea name="job_desc" placeholder="Paste Job Description" required></textarea>
-
-        <select name="role">
-            <option>Software Engineer</option>
-            <option>Data Analyst</option>
-            <option>ML Engineer</option>
-        </select>
-
-        <button type="submit">Analyze</button>
-    </form>
-
-    {% if score %}
-    <div class="card">
-
-        <h2>Score: {{ score }}%</h2>
-
-        <h3>❗ JD Missing Skills</h3>
-        <ul>
-            {% for s in jd_missing %}
-                <li>{{ s }}</li>
-            {% endfor %}
-        </ul>
-
-        <h3>🎯 Role-Based Missing Skills</h3>
-
-        {% for category, skills in role_missing.items() %}
-            <h4>{{ category }}</h4>
-            <ul>
-                {% for s in skills %}
-                    <li>{{ s }}</li>
-                {% endfor %}
-            </ul>
+    <h3>❗ JD Missing Skills</h3>
+    <ul>
+        {% for s in jd_missing %}
+            <li>{{ s }}</li>
         {% endfor %}
+    </ul>
 
-        <h3>💡 Suggestions</h3>
+    <h3>🎯 Role-Based Missing Skills</h3>
+
+    {% for category, skills in role_missing.items() %}
+        <h4>{{ category }}</h4>
         <ul>
-            {% for s in suggestions %}
+            {% for s in skills %}
                 <li>{{ s }}</li>
             {% endfor %}
         </ul>
+    {% endfor %}
 
-    </div>
-    {% endif %}
+    <h3>💡 Suggestions</h3>
+    <ul>
+        {% for s in suggestions %}
+            <li>{{ s }}</li>
+        {% endfor %}
+    </ul>
 
 </div>
-
-</body>
-</html>
