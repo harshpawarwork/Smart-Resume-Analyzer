@@ -1,23 +1,68 @@
-body {
+/* RESET */
+* {
     margin: 0;
-    font-family: 'Segoe UI', sans-serif;
-    background: #0f172a;
-    color: #fff;
+    padding: 0;
+    box-sizing: border-box;
 }
 
-/* Container */
+/* 🔥 BACKGROUND (GLASS BASE) */
+body {
+    font-family: 'Segoe UI', sans-serif;
+    background: linear-gradient(135deg, #1e3a8a, #9333ea);
+    color: #fff;
+    min-height: 100vh;
+}
+
+/* 🔥 SOFT GLOW BACKGROUND */
+body::before {
+    content: "";
+    position: fixed;
+    width: 600px;
+    height: 600px;
+    background: radial-gradient(circle, #3b82f6, transparent 70%);
+    top: -100px;
+    left: -100px;
+    filter: blur(120px);
+    opacity: 0.4;
+    z-index: -1;
+}
+
+body::after {
+    content: "";
+    position: fixed;
+    width: 600px;
+    height: 600px;
+    background: radial-gradient(circle, #9333ea, transparent 70%);
+    bottom: -100px;
+    right: -100px;
+    filter: blur(120px);
+    opacity: 0.4;
+    z-index: -1;
+}
+
+/* CONTAINER */
 .container {
     max-width: 1000px;
     margin: 50px auto;
     padding: 20px;
 }
 
-/* Card */
+/* 🔥 GLASS CARD */
 .card {
-    background: #1e293b;
-    padding: 25px;
+    background: rgba(255, 255, 255, 0.08);
+    backdrop-filter: blur(15px);
     border-radius: 15px;
+    padding: 25px;
     margin-bottom: 25px;
+    border: 1px solid rgba(255,255,255,0.2);
+    box-shadow: 0 8px 32px rgba(0,0,0,0.3);
+    transition: 0.3s;
+}
+
+/* Hover */
+.card:hover {
+    transform: translateY(-5px);
+    box-shadow: 0 15px 40px rgba(0,0,0,0.4);
 }
 
 /* Heading */
@@ -26,16 +71,21 @@ h1 {
     margin-bottom: 20px;
 }
 
-/* Drag Area */
+/* DRAG BOX */
 #drop-area {
-    border: 2px dashed #3b82f6;
+    border: 2px dashed rgba(255,255,255,0.4);
     border-radius: 12px;
     padding: 40px;
     text-align: center;
     margin-bottom: 20px;
+    transition: 0.3s;
 }
 
-/* Hide file input */
+#drop-area:hover {
+    background: rgba(255,255,255,0.1);
+}
+
+/* Hide input */
 #fileElem {
     display: none;
 }
@@ -44,13 +94,17 @@ h1 {
 .upload-btn {
     display: inline-block;
     padding: 10px 20px;
-    background: #3b82f6;
+    background: rgba(255,255,255,0.2);
     border-radius: 6px;
     cursor: pointer;
-    margin-top: 10px;
+    transition: 0.3s;
 }
 
-/* Inputs */
+.upload-btn:hover {
+    background: rgba(255,255,255,0.3);
+}
+
+/* TEXTAREA */
 textarea {
     width: 100%;
     height: 120px;
@@ -58,9 +112,11 @@ textarea {
     border-radius: 8px;
     border: none;
     margin-bottom: 15px;
+    background: rgba(255,255,255,0.1);
+    color: white;
 }
 
-/* Row for select + button */
+/* SELECT */
 .form-row {
     display: flex;
     gap: 10px;
@@ -71,33 +127,41 @@ select {
     padding: 10px;
     border-radius: 8px;
     border: none;
+    background: rgba(255,255,255,0.1);
+    color: white;
 }
 
+/* BUTTON */
 button {
     padding: 10px 20px;
     border-radius: 8px;
     border: none;
-    background: #22c55e;
+    background: linear-gradient(90deg, #22c55e, #16a34a);
     color: white;
     font-weight: bold;
     cursor: pointer;
+    transition: 0.3s;
 }
 
-/* Grid layout */
+button:hover {
+    transform: scale(1.05);
+}
+
+/* GRID */
 .grid {
     display: grid;
     grid-template-columns: 1fr 1fr;
     gap: 20px;
 }
 
-/* Score */
+/* SCORE */
 .score {
-    font-size: 2rem;
+    font-size: 2.2rem;
     text-align: center;
     color: #22c55e;
 }
 
-/* Chips */
+/* CHIPS */
 .chips {
     display: flex;
     flex-wrap: wrap;
@@ -105,11 +169,20 @@ button {
 }
 
 .chip {
-    background: #334155;
+    background: rgba(255,255,255,0.15);
     padding: 6px 12px;
     border-radius: 20px;
 }
 
 .chip.red {
-    background: #ef4444;
+    background: rgba(239,68,68,0.7);
+}
+
+/* LIST */
+ul {
+    padding-left: 20px;
+}
+
+li {
+    margin: 5px 0;
 }
