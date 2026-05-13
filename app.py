@@ -51,7 +51,7 @@ def index():
             # 💡 Suggestions
             suggestions = generate_suggestions(role_missing)
 
-            # 🔥 SEND EVERYTHING TO UI
+            #  SEND EVERYTHING TO UI
             return render_template(
                 "index.html",
                 score=score,
@@ -61,7 +61,7 @@ def index():
             )
 
         except Exception as e:
-            # 🔥 Show error clearly
+            #  Show error clearly
             return render_template(
                 "index.html",
                 score=None,
